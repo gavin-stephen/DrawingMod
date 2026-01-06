@@ -2,9 +2,11 @@ package org.untitled.immolation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -641,7 +643,7 @@ public class Drawing extends Screen {
             context.fill(leftX, leftY, rightX, rightY, hoverBorder.color);
         }
         //render all tool icons here
-        //renderToolIcons(context);
+        renderToolIcons(context);
 
     }
 
@@ -661,17 +663,48 @@ public class Drawing extends Screen {
         int buttonX = x + (w - texWidth) / 2;
         int buttonY = y + h + 10;
 
-        // Pencil background
-        drawSquare(context, buttonX - 21, buttonY - 1, buttonX + 11, buttonY + 31, bgColor);
-        // Eraser background
-        drawSquare(context, buttonX + 21, buttonY - 1, buttonX + 53, buttonY + 31, bgColor);
+//        // Pencil background
+//        drawSquare(context, buttonX - 21, buttonY - 1, buttonX + 11, buttonY + 31, bgColor);
+//        // Eraser background
+//        drawSquare(context, buttonX + 21, buttonY - 1, buttonX + 53, buttonY + 31, bgColor);
+//
+//        // Icons
+//        RenderSystem.setShaderColor(1, 1, 1, 1);
+//        context.drawTexture(RenderLayer::getGuiTextured, PENCIL, buttonX - 20, buttonY, 0, 0, texWidth, texHeight, texWidth, texHeight);
+//        context.drawTexture(RenderLayer::getGuiTextured, ERASER, buttonX + 20, buttonY, 0, 0, texWidth, texHeight, texWidth, texHeight);
 
-        // Icons
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        context.drawTexture(RenderLayer::getGuiTextured, PENCIL, buttonX - 20, buttonY, 0, 0, texWidth, texHeight, texWidth, texHeight);
-        context.drawTexture(RenderLayer::getGuiTextured, ERASER, buttonX + 20, buttonY, 0, 0, texWidth, texHeight, texWidth, texHeight);
 
+        TexturedButtonWidget eraserWidget = new TexturedButtonWidget(
+                buttonX-20,
+                buttonY,
+                texWidth,
+                texHeight,
+                new ButtonTextures(ERASER, ERASER),
+                button -> {
 
+                    assert client.player != null;
+                    client.player.sendMessage(Text.of("Eraser clicked"), true);
+                }
+
+        );
+        addDrawableChild(eraserWidget);
+        TexturedButtonWidget pencilWidget = new TexturedButtonWidget(
+                buttonX+20, //40 offset from previous
+                buttonY,
+                texWidth,
+                texHeight,
+                new ButtonTextures(PENCIL, PENCIL),
+                button -> {
+
+                    assert client.player != null;
+                    client.player.sendMessage(Text.of("pencil clicked"), true);
+                }
+
+        );
+        addDrawableChild(pencilWidget);
+
+        //could be cool to add a rainbow LERP to some UI elements using Util.getMillis()
+        //https://github.com/FabricMC/fabric-docs/blob/main/develop/rendering/hud.md
 
     }
 
