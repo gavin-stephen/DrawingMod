@@ -30,7 +30,7 @@ public class Drawing extends Screen {
     private static LineCommand previewLine = null;
     private static BoxCommand previewBox = null; // to be used in Square tool
     private static CircleCommand previewCircle = null;
-
+    private static BoxCommand previewBrushes = null;
     private boolean onCanvas = false;
 
     private int pixelSize = 1;
@@ -237,6 +237,7 @@ public class Drawing extends Screen {
         int dy = y1 - y2;
         return dx * dx + dy * dy;
     }
+    //delete function if unused
     private boolean rectInsideCanvas(int x1, int y1, int x2, int y2) {
         int half = pixelSize / 2;
 
@@ -397,6 +398,9 @@ public class Drawing extends Screen {
 //                cancelActiveTool();
 //            }
 //        }
+        if (isInCanvas(mouseX, mouseY)) {
+            hoverBorder = new Pixel((int) mouseX, (int) mouseY,ColorPicker.getIntColor(), pixelSize);
+        }
         //TODO: figure out how to do clipping and make global states more consistent
         super.mouseMoved(mouseX, mouseY);
     }
@@ -478,6 +482,9 @@ public class Drawing extends Screen {
             if (currentTool == Tool.CIRCLE) {
                 List<Pixel> circle = drawCircleClipped(x, y, mouseX, mouseY, pixelSize, ColorPicker.getIntColor());
                 previewCircle = new CircleCommand(circle);
+            }
+            if (currentTool == Tool.ERASER || currentTool == Tool.PAINTBRUSH) {
+
             }
         }
         //}
@@ -632,7 +639,7 @@ public class Drawing extends Screen {
             previewCircle.draw(context);
         }
         if (hoverBorder != null && isInCanvas(mouseX,mouseY)) {
-            //this makes me wonder if i did it wrong? Should i have centered it from the beginning
+            //it works but it looks slightly awkward
             int half = pixelSize/2;
             int leftX = hoverBorder.x - half ;
             int leftY = hoverBorder.y - half ;
@@ -658,7 +665,7 @@ public class Drawing extends Screen {
         int y = canvasY();
         int w = canvasWidth();
         int h = canvasHeight();
-        int bgColor = 0x88000000;
+        int bgColor = 0x88000000; //grey unused now
 
         int buttonX = x + (w - texWidth) / 2;
         int buttonY = y + h + 10;

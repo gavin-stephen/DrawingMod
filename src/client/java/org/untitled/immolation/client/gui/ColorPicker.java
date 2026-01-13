@@ -42,8 +42,6 @@ public class ColorPicker extends ClickableWidget {
         int x = getX();
         int y = getY();
 
-        //System.out.println("renderwidfget colorpicker");
-
         //makes the gradient black -> transparent vertical and white -> hue
         int black = 0xFFFFFFFF; //can add global dictionary of colors in customcolor
 
