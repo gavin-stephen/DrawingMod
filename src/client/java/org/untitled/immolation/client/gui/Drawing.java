@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.*;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -57,6 +58,7 @@ public class Drawing extends Screen {
     // Each DrawCommand must have draw + erase functions
     interface DrawCommand {
         void draw(DrawContext context);
+        void draw(NativeImage img);
         List<DrawCommand> eraseAt(int x, int y, int radius);
     }
 
@@ -90,6 +92,20 @@ public class Drawing extends Screen {
 
             }
         }
+        // Overload function for exporting png
+        @Override
+        public void draw(NativeImage img) {
+            for (Pixel p : pixels) {
+                int half = p.size / 2;
+                int leftX = Math.max(p.x - half, canvasX());
+                int leftY = Math.max(p.y - half, canvasY());
+                int rightX = Math.min(p.x + p.size, canvasX()+canvasWidth()); //to ensure width=1 still shows up
+                int rightY  = Math.min(p.y + p.size, canvasY()+canvasHeight());
+                if (leftX<rightX && leftY<rightY) {
+                    fillRectangle(img,leftX,leftY,rightX,rightY, p.color);
+                }
+            }
+        }
 
         @Override
         public List<DrawCommand> eraseAt(int x, int y, int r) {
@@ -101,7 +117,17 @@ public class Drawing extends Screen {
             }
         }
     }
+    private void fillRectangle(NativeImage img, int leftX, int leftY, int rightX, int rightY, int color) {
+        //theoretically should work
+        for (int i = leftX; i < rightX; i++) {
+            for (int j = leftY; j < rightY; j++) {
+                if (isInCanvas(i,j)){
+                    img.setColorArgb(i, j, color);
+                }
 
+            }
+        }
+    }
     // Represents a rectangular shape made of 4 edges (lines)
     class BoxCommand implements DrawCommand {
         List<LineCommand> edges;
@@ -116,6 +142,11 @@ public class Drawing extends Screen {
             for (LineCommand edge : edges) {
                 edge.draw(context);
             }
+        }
+        // Overload function for exporting png
+        @Override
+        public void draw(NativeImage img) {
+            System.out.println("temporary export");
         }
 
         public List<DrawCommand> eraseAt(int x, int y, int r) {
@@ -156,7 +187,11 @@ public class Drawing extends Screen {
 
             }
         }
-
+        // Overload function for exporting png
+        @Override
+        public void draw(NativeImage img) {
+            System.out.println("temporary export");
+        }
         @Override
         public List<DrawCommand> eraseAt(int x, int y, int r) {
 
@@ -180,7 +215,11 @@ public class Drawing extends Screen {
                 context.fill(p.x, p.y, p.x + p.size, p.y + p.size, p.color);
             }
         }
-
+        // Overload function for exporting png
+        @Override
+        public void draw(NativeImage img) {
+            System.out.println("temporary export");
+        }
         @Override
         public List<DrawCommand> eraseAt(int x, int y, int r) {
             pixels.removeIf(p -> Math.hypot(p.x - x, p.y - y) <= r); //if point is within the circle radius of point it gets removed
@@ -399,9 +438,16 @@ public class Drawing extends Screen {
 //            }
 //        }
         if (isInCanvas(mouseX, mouseY)) {
-            hoverBorder = new Pixel((int) mouseX, (int) mouseY,ColorPicker.getIntColor(), pixelSize);
+            if (currentTool == Tool.ERASER) {
+                int newAlpha = 128;
+                int newInt = (ColorPicker.getIntColor() | newAlpha << 24);
+                hoverBorder = new Pixel((int) mouseX, (int) mouseY, newInt, pixelSize);
+            } else{
+                hoverBorder = new Pixel((int) mouseX, (int) mouseY,ColorPicker.getIntColor(), pixelSize);
+            }
+
         }
-        //TODO: figure out how to do clipping and make global states more consistent
+
         super.mouseMoved(mouseX, mouseY);
     }
 
@@ -427,7 +473,11 @@ public class Drawing extends Screen {
 
                 List<Pixel> stroke = new ArrayList<>();
 
-                stroke.add(new Pixel((int)mouseX, (int)mouseY, ColorPicker.getIntColor(), pixelSize));
+                //stroke.add(new Pixel((int)mouseX, (int)mouseY, ColorPicker.getIntColor(), pixelSize));
+                //adds interpolating to the paintbrush, making it more smooth
+                drawInterpolated(x,y,mouseX,mouseY,ColorPicker.getIntColor(), 1, stroke);
+                x = (int) mouseX;
+                y = (int) mouseY;
                 drawStack.add(new PixelCommand(stroke));
 
             }
@@ -483,9 +533,7 @@ public class Drawing extends Screen {
                 List<Pixel> circle = drawCircleClipped(x, y, mouseX, mouseY, pixelSize, ColorPicker.getIntColor());
                 previewCircle = new CircleCommand(circle);
             }
-            if (currentTool == Tool.ERASER || currentTool == Tool.PAINTBRUSH) {
 
-            }
         }
         //}
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -580,6 +628,13 @@ public class Drawing extends Screen {
             button.setMessage(Text.of("Tool : " + (currentTool)));
         }).dimensions(40, 40, 120, 20).build();
         addDrawableChild(toggleButton);
+
+        ButtonWidget downloadPNG = ButtonWidget.builder(Text.of("Download"), (button) ->{
+                    ExportPainting.exportAsPNG(drawStack, canvasWidth(), canvasHeight());
+
+
+        }).dimensions(40,60,120,20).build();
+        addDrawableChild(downloadPNG);
 
         //Draw parts of the ColorPicker
         AlphaSlider alphaSlider = new AlphaSlider(width-100,20,100,20, Text.literal("Alpha: " + (int)(ColorPicker.alpha*255)), ColorPicker.alpha);
@@ -710,10 +765,12 @@ public class Drawing extends Screen {
         );
         addDrawableChild(pencilWidget);
 
+
         //could be cool to add a rainbow LERP to some UI elements using Util.getMillis()
         //https://github.com/FabricMC/fabric-docs/blob/main/develop/rendering/hud.md
 
     }
+
 
     // ===============================
     // Rendering Helpers (unchanged)
