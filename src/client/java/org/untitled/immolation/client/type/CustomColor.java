@@ -43,7 +43,9 @@ public class CustomColor {
 
 
     );
-
+    public int customColorToInt(CustomColor color) {
+        return (color.a << 24 | (color.r << 16) | (color.g << 8) | color.b);
+    }
     /**
      *Method takes in a colour int in the format 0x(AA)RRGGBB
      * @param num (the colour int)

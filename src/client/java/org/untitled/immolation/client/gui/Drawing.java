@@ -95,16 +95,7 @@ public class Drawing extends Screen {
         // Overload function for exporting png
         @Override
         public void draw(NativeImage img) {
-            for (Pixel p : pixels) {
-                int half = p.size / 2;
-                int leftX = Math.max(p.x - half, canvasX());
-                int leftY = Math.max(p.y - half, canvasY());
-                int rightX = Math.min(p.x + p.size, canvasX()+canvasWidth()); //to ensure width=1 still shows up
-                int rightY  = Math.min(p.y + p.size, canvasY()+canvasHeight());
-                if (leftX<rightX && leftY<rightY) {
-                    fillRectangle(img,leftX,leftY,rightX,rightY, p.color);
-                }
-            }
+            downloadPixels(img, pixels);
         }
 
         @Override
@@ -118,10 +109,7 @@ public class Drawing extends Screen {
         }
     }
     private void fillRectangle(NativeImage img, int leftX, int leftY, int rightX, int rightY, int color) {
-        System.out.println("rightX  =" + rightX);
-        System.out.println("rightY  =" + rightY);
-        System.out.println("leftX  =" + leftX);
-        System.out.println("leftY  =" + leftY);
+
         for (int i = leftX; i < rightX; i++) {
             for (int j = leftY; j < rightY; j++) {
                 int imageX = i-canvasX(); //normalize i(x), j(y) to NativeImage coordinates
@@ -151,6 +139,9 @@ public class Drawing extends Screen {
         // Overload function for exporting png
         @Override
         public void draw(NativeImage img) {
+            for (LineCommand edge : edges) {
+                edge.draw(img);
+            }
             System.out.println("temporary export");
         }
 
@@ -195,7 +186,8 @@ public class Drawing extends Screen {
         // Overload function for exporting png
         @Override
         public void draw(NativeImage img) {
-            System.out.println("temporary export");
+
+            downloadPixels(img, pixels);
         }
         @Override
         public List<DrawCommand> eraseAt(int x, int y, int r) {
@@ -223,8 +215,12 @@ public class Drawing extends Screen {
         // Overload function for exporting png
         @Override
         public void draw(NativeImage img) {
-            System.out.println("temporary export");
+            //more duplicated code ill remove later lol
+            downloadPixels(img, pixels);
         }
+
+
+
         @Override
         public List<DrawCommand> eraseAt(int x, int y, int r) {
             pixels.removeIf(p -> Math.hypot(p.x - x, p.y - y) <= r); //if point is within the circle radius of point it gets removed
@@ -232,7 +228,20 @@ public class Drawing extends Screen {
         }
     }
 
+    //Helper method for the DrawCommand class to download png with all pixels in List<Pixel> pixels
+    private void downloadPixels(NativeImage img, List<Pixel> pixels) {
+        for (Pixel p : pixels) {
+            int half = p.size / 2;
+            int leftX = Math.max(p.x - half, canvasX());
+            int leftY = Math.max(p.y - half, canvasY());
+            int rightX = Math.min(p.x + p.size, canvasX()+canvasWidth()); //to ensure width=1 still shows up
+            int rightY  = Math.min(p.y + p.size, canvasY()+canvasHeight());
+            if (leftX<rightX && leftY<rightY) {
+                fillRectangle(img,leftX,leftY,rightX,rightY, p.color);
+            }
+        }
 
+    }
     //creates a line out of canvas bounds when swapped to using button (prob just change rendering to check for it?)
     private Tool nextTool(Tool current) {
         Tool[] tools = Tool.values();
@@ -443,9 +452,10 @@ public class Drawing extends Screen {
 //            }
 //        }
         if (isInCanvas(mouseX, mouseY)) {
+            //TODO: should make eraser preview show what is below it (likely have to use LWJGL directly)
             if (currentTool == Tool.ERASER) {
                 int newAlpha = 128;
-                int newInt = (ColorPicker.getIntColor() | newAlpha << 24);
+                int newInt = (0xFFAAAAAA | newAlpha << 24); //0xFFAAAAAA = gray
                 hoverBorder = new Pixel((int) mouseX, (int) mouseY, newInt, pixelSize);
             } else{
                 hoverBorder = new Pixel((int) mouseX, (int) mouseY,ColorPicker.getIntColor(), pixelSize);
