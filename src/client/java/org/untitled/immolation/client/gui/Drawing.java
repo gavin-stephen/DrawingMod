@@ -118,12 +118,17 @@ public class Drawing extends Screen {
         }
     }
     private void fillRectangle(NativeImage img, int leftX, int leftY, int rightX, int rightY, int color) {
-        //theoretically should work
+        System.out.println("rightX  =" + rightX);
+        System.out.println("rightY  =" + rightY);
+        System.out.println("leftX  =" + leftX);
+        System.out.println("leftY  =" + leftY);
         for (int i = leftX; i < rightX; i++) {
             for (int j = leftY; j < rightY; j++) {
-                if (isInCanvas(i,j)){
-                    img.setColorArgb(i, j, color);
-                }
+                int imageX = i-canvasX(); //normalize i(x), j(y) to NativeImage coordinates
+                int imageY = j-canvasY();
+                img.setColorArgb(imageX, imageY, color);
+
+
 
             }
         }
@@ -475,7 +480,7 @@ public class Drawing extends Screen {
 
                 //stroke.add(new Pixel((int)mouseX, (int)mouseY, ColorPicker.getIntColor(), pixelSize));
                 //adds interpolating to the paintbrush, making it more smooth
-                drawInterpolated(x,y,mouseX,mouseY,ColorPicker.getIntColor(), 1, stroke);
+                drawInterpolated(x,y,mouseX,mouseY,ColorPicker.getIntColor(), pixelSize, stroke);
                 x = (int) mouseX;
                 y = (int) mouseY;
                 drawStack.add(new PixelCommand(stroke));
@@ -619,21 +624,21 @@ public class Drawing extends Screen {
         };
         addDrawableChild(brushSizeSlider);
 
-        ButtonWidget toggleButton = ButtonWidget.builder(Text.of("Tool : " + (currentTool)), (button) -> {
+        ButtonWidget toolButton = ButtonWidget.builder(Text.of("Tool : " + (currentTool)), (button) -> {
             //ensure that the previous tool instantly deactivates
             cancelActiveTool();
             //goes to next tool when click on button (change later)
             currentTool = nextTool(currentTool);
 
             button.setMessage(Text.of("Tool : " + (currentTool)));
-        }).dimensions(40, 40, 120, 20).build();
-        addDrawableChild(toggleButton);
+        }).dimensions(0, 40, 120, 20).build();
+        addDrawableChild(toolButton);
 
         ButtonWidget downloadPNG = ButtonWidget.builder(Text.of("Download"), (button) ->{
                     ExportPainting.exportAsPNG(drawStack, canvasWidth(), canvasHeight());
 
 
-        }).dimensions(40,60,120,20).build();
+        }).dimensions(0,60,120,20).build();
         addDrawableChild(downloadPNG);
 
         //Draw parts of the ColorPicker
@@ -791,7 +796,7 @@ public class Drawing extends Screen {
         double dist = Math.hypot(dx, dy); // sqrt(dx^2 + dy^2)
 
         // spacing controls smoothness
-        double step = Math.max(1.0, size * 0.5);
+        double step = size * 0.25; // makes it REALLY smooth
 
         int steps = (int) (dist / step);
 

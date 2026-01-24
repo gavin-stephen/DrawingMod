@@ -21,11 +21,11 @@ public class ExportPainting extends ClickableWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        int x = getX();
-        int y = getY();
-        int width = getWidth();
-        int height = getHeight();
-
+//        int x = getX();
+//        int y = getY();
+//        int width = getWidth();
+//        int height = getHeight();
+        System.out.println("rendered ExportPainting");
 
     }
 
