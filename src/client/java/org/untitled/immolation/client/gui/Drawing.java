@@ -115,6 +115,7 @@ public class Drawing extends Screen {
                 int imageX = i-canvasX(); //normalize i(x), j(y) to NativeImage coordinates
                 int imageY = j-canvasY();
                 img.setColorArgb(imageX, imageY, color);
+                //TODO: MAKE NEW MORE EFFIICENT DATA STRUCTURE TO SAVE DRAWINGS THAT IS JUST PIXELS INSTEAD OF DRAWSTACK REPRESENTATION
 
 
 

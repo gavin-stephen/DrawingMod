@@ -1,5 +1,7 @@
 package org.untitled.immolation.client.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -15,6 +17,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 public class ExportPainting extends ClickableWidget {
@@ -61,8 +67,22 @@ public class ExportPainting extends ClickableWidget {
         File gameDir = MinecraftClient.getInstance().runDirectory;
         File folder = new File(gameDir, "exports");
         folder.mkdirs();
+
+
+        File[] files = folder.listFiles();
+        int count = (files == null) ? 0 : files.length /  2;
+
         //create new png file and write to it using the NativeImage buffer
-        File file = new File(folder, "export.png");
+        File file = new File(folder, "export" + count + ".png");
+        File file2 = new File(folder, "export" + count + ".json");
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            try (Writer writer = Files.newBufferedWriter(file2.toPath())){
+                gson.toJson(drawStack, writer);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         try {
             img.writeTo(file);
         } catch (IOException e) {
@@ -99,5 +119,19 @@ public class ExportPainting extends ClickableWidget {
         assert MinecraftClient.getInstance().player != null;
         MinecraftClient.getInstance().player.sendMessage(message, false);
 
+    }
+
+    /***
+     * reads a saved image file and returns the drawstack
+     * @param file
+     * @return drawstack
+     */
+    public static List<Drawing.DrawCommand> readImage(File file) throws IOException {
+        Gson gson = new Gson();
+        //likely change it to pixel based for more efficient reading ( up to 8mb json is disgusting to even look at)
+        try (Reader reader = Files.newBufferedReader(file.toPath())) {
+            List<Drawing.DrawCommand> drawstack = gson.fromJson(reader, List.class);
+            return drawstack;
+        }
     }
 }
