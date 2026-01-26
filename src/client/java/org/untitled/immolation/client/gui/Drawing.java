@@ -457,10 +457,12 @@ public class Drawing extends Screen {
                 int newAlpha = 128;
                 int newInt = (0xFFAAAAAA | newAlpha << 24); //0xFFAAAAAA = gray
                 hoverBorder = new Pixel((int) mouseX, (int) mouseY, newInt, pixelSize);
-            } else{
+            } else if (currentTool == Tool.PAINTBRUSH) {
                 hoverBorder = new Pixel((int) mouseX, (int) mouseY,ColorPicker.getIntColor(), pixelSize);
             }
 
+        } else {
+            hoverBorder = null; // hide preview
         }
 
         super.mouseMoved(mouseX, mouseY);
@@ -650,6 +652,8 @@ public class Drawing extends Screen {
 
         }).dimensions(0,60,120,20).build();
         addDrawableChild(downloadPNG);
+
+
 
         //Draw parts of the ColorPicker
         AlphaSlider alphaSlider = new AlphaSlider(width-100,20,100,20, Text.literal("Alpha: " + (int)(ColorPicker.alpha*255)), ColorPicker.alpha);
