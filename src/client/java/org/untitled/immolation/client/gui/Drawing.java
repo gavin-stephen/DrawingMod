@@ -27,6 +27,7 @@ public class Drawing extends Screen {
     //drawStack stores all drawing commands in order(e.g Draw a line, draw a box, draw a circle)
     private final List<DrawCommand> redoLog = new ArrayList<>();
     private final List<DrawCommand> drawStack = new ArrayList<>();
+    private int[][] tempSavedImage = new int[canvasWidth()][canvasHeight()];// nxn array that stores each pixel color
     private static Pixel hoverBorder = null;
     private static LineCommand previewLine = null;
     private static BoxCommand previewBox = null; // to be used in Square tool
@@ -116,7 +117,9 @@ public class Drawing extends Screen {
                 int imageY = j-canvasY();
                 img.setColorArgb(imageX, imageY, color);
                 //TODO: MAKE NEW MORE EFFIICENT DATA STRUCTURE TO SAVE DRAWINGS THAT IS JUST PIXELS INSTEAD OF DRAWSTACK REPRESENTATION
-
+                //System.out.println("imagex in fill = " + imageX);
+                //System.out.println("imagey in fill = " + imageY);
+                tempSavedImage[imageX][imageY] = color;
 
 
             }
@@ -611,6 +614,10 @@ public class Drawing extends Screen {
     protected void init() {
         //clear boxes
         //drawnBoxes.clear();
+        tempSavedImage = new int[canvasWidth()][canvasHeight()];
+        System.out.println("tempsaved length " + tempSavedImage.length);
+        System.out.println("canvasHeight : " + canvasHeight());
+        System.out.println("canvaswidth : " + canvasWidth());
         previewBox = null;
         //clear line
         previewCircle = null;
@@ -648,7 +655,7 @@ public class Drawing extends Screen {
         addDrawableChild(toolButton);
 
         ButtonWidget downloadPNG = ButtonWidget.builder(Text.of("Download"), (button) ->{
-                    ExportPainting.exportAsPNG(drawStack, canvasWidth(), canvasHeight());
+                    ExportPainting.exportAsPNG(drawStack, tempSavedImage, canvasWidth(), canvasHeight());
 
 
         }).dimensions(0,60,120,20).build();

@@ -2,11 +2,17 @@ package org.untitled.immolation.client.keybinds;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.untitled.immolation.client.gui.Drawing;
+
+import java.awt.*;
+
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class KeyBindManager {
     public static KeyBinding keyBinding1;
@@ -31,5 +37,6 @@ public class KeyBindManager {
             }
 
         });
+
     }
 }

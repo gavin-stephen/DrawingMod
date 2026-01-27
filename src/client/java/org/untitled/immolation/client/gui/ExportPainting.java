@@ -51,7 +51,7 @@ public class ExportPainting extends ClickableWidget {
      * @param canvasWidth
      * @param canvasHeight
      */
-    public static void exportAsPNG(List<Drawing.DrawCommand> drawStack, int canvasWidth, int canvasHeight) {
+    public static void exportAsPNG(List<Drawing.DrawCommand> drawStack, int[][] savedImage, int canvasWidth, int canvasHeight) {
         //add functionality later
         System.out.println("CURRENT WORKING DIRECTORY IS" + System.getProperty("user.dir"));
         NativeImage img = new NativeImage(canvasWidth, canvasHeight, true);
@@ -74,11 +74,17 @@ public class ExportPainting extends ClickableWidget {
 
         //create new png file and write to it using the NativeImage buffer
         File file = new File(folder, "export" + count + ".png");
-        File file2 = new File(folder, "export" + count + ".json");
+        File file2 = new File(folder, "export" + count + ".txt");
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            //write the savedImage to export.txt, with each int being an index of the color in painting
             try (Writer writer = Files.newBufferedWriter(file2.toPath())){
-                gson.toJson(drawStack, writer);
+                for (int  i= 0 ; i < savedImage.length; i++) {
+                    for (int j = 0 ; j < savedImage[0].length; j++) {
+                        writer.write(savedImage[i][j] + " ");
+                    }
+                    writer.write("\n");
+                }
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
