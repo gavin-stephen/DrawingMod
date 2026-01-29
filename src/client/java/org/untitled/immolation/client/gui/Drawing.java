@@ -1,6 +1,7 @@
 package org.untitled.immolation.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +14,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -693,7 +697,7 @@ public class Drawing extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
+        context.fill(0, 0, width, height, 0x80FF0000);
         int color = 0x88000000;
 
         // Canvas background
@@ -797,6 +801,38 @@ public class Drawing extends Screen {
         //https://github.com/FabricMC/fabric-docs/blob/main/develop/rendering/hud.md
 
     }
+
+
+    public void importFrom(Reader reader) throws IOException {
+        System.out.println("IMPORT width=" + width + " height=" + height);
+
+        BufferedReader buf = new BufferedReader(reader);
+        String line;
+        drawStack.clear();
+        List<Pixel> addedPixels = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        while (buf.ready()) {
+            i = 0;
+            String string = buf.readLine();
+            String[] split = string.split(" ");
+            for (String color : split) {
+                //System.out.println(color);
+                addedPixels.add(new Pixel(i,j, Integer.parseInt(color) , 1));
+
+                i++;
+            }
+            j++;
+            //System.out.println(string);
+        }
+        drawStack.add(new PixelCommand(addedPixels));
+        //assert client != null;
+
+         //holy my code is bad please refactor it later
+    }
+
+
+
 
 
     // ===============================

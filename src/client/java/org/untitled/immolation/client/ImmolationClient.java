@@ -2,7 +2,7 @@ package org.untitled.immolation.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import org.untitled.immolation.client.keybinds.KeyBindManager;
-import org.untitled.immolation.client.keybinds.ModCommandManager;
+import org.untitled.immolation.client.commands.ModCommandManager;
 
 public class ImmolationClient implements ClientModInitializer {
 

@@ -80,7 +80,12 @@ public class ExportPainting extends ClickableWidget {
             try (Writer writer = Files.newBufferedWriter(file2.toPath())){
                 for (int  i= 0 ; i < savedImage.length; i++) {
                     for (int j = 0 ; j < savedImage[0].length; j++) {
-                        writer.write(savedImage[i][j] + " ");
+                        writer.write(Integer.toString(savedImage[i][j]));
+
+                        if (j != savedImage[i].length - 1) {
+                            writer.write(' ');
+                        }
+
                     }
                     writer.write("\n");
                 }
@@ -125,19 +130,5 @@ public class ExportPainting extends ClickableWidget {
         assert MinecraftClient.getInstance().player != null;
         MinecraftClient.getInstance().player.sendMessage(message, false);
 
-    }
-
-    /***
-     * reads a saved image file and returns the drawstack
-     * @param file
-     * @return drawstack
-     */
-    public static List<Drawing.DrawCommand> readImage(File file) throws IOException {
-        Gson gson = new Gson();
-        //likely change it to pixel based for more efficient reading ( up to 8mb json is disgusting to even look at)
-        try (Reader reader = Files.newBufferedReader(file.toPath())) {
-            List<Drawing.DrawCommand> drawstack = gson.fromJson(reader, List.class);
-            return drawstack;
-        }
     }
 }
