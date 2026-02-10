@@ -697,7 +697,7 @@ public class Drawing extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.fill(0, 0, width, height, 0x80FF0000);
+        //context.fill(0, 0, width, height, 0x80FF0000); testing with red
         int color = 0x88000000;
 
         // Canvas background
@@ -807,25 +807,49 @@ public class Drawing extends Screen {
         System.out.println("IMPORT width=" + width + " height=" + height);
 
         BufferedReader buf = new BufferedReader(reader);
-        String line;
+
         drawStack.clear();
         List<Pixel> addedPixels = new ArrayList<>();
         int i = 0;
         int j = 0;
-        while (buf.ready()) {
+        //TODO: look into why init is being stalled, (should probably wait for init to run before running this)
+
+        //height = 126, width = 240
+//        int offsetX = (240 - 120) / 2;
+//        int offsetY = (126 - 63) / 2;
+        //holy hardcoded values... it works just refactor later
+        int offsetX = (480-240)/2;
+        int offsetY = (252-126)/2;
+        System.out.println("offsetX = " + offsetX);
+        System.out.println("offsetY = " + offsetY);
+        String line;
+        while ((line = buf.readLine()) != null) {
             i = 0;
             String string = buf.readLine();
             String[] split = string.split(" ");
             for (String color : split) {
                 //System.out.println(color);
-                addedPixels.add(new Pixel(i,j, Integer.parseInt(color) , 1));
+                if (!color.equals("0")){
+                    int newX = i + offsetX;
+                    int newY = j + offsetY;
+                    addedPixels.add(new Pixel(newX,newY, Integer.parseInt(color) , 1));
 
+                }
+
+                //System.out.println("added pixel : x = " + newX  + " y = " + newY );
                 i++;
             }
+            System.out.println("There were i values = " + i);
             j++;
             //System.out.println(string);
         }
+        //TODO: appears that the txt files are being truncated?? j = 120 but width = 240... look back on it tomorrow
+        System.out.println("There were j values = " + j);
         drawStack.add(new PixelCommand(addedPixels));
+        for ( Pixel p : addedPixels) {
+
+        }
+
         //assert client != null;
 
          //holy my code is bad please refactor it later
