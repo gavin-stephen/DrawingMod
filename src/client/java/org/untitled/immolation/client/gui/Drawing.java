@@ -31,7 +31,7 @@ public class Drawing extends Screen {
     //drawStack stores all drawing commands in order(e.g Draw a line, draw a box, draw a circle)
     private final List<DrawCommand> redoLog = new ArrayList<>();
     private final List<DrawCommand> drawStack = new ArrayList<>();
-    private int[][] tempSavedImage = new int[canvasWidth()][canvasHeight()];// nxn array that stores each pixel color
+    private int[][] tempSavedImage = new int[canvasHeight()][canvasWidth()];// nxn array that stores each pixel color
     private static Pixel hoverBorder = null;
     private static LineCommand previewLine = null;
     private static BoxCommand previewBox = null; // to be used in Square tool
@@ -123,7 +123,7 @@ public class Drawing extends Screen {
                 //TODO: MAKE NEW MORE EFFIICENT DATA STRUCTURE TO SAVE DRAWINGS THAT IS JUST PIXELS INSTEAD OF DRAWSTACK REPRESENTATION
                 //System.out.println("imagex in fill = " + imageX);
                 //System.out.println("imagey in fill = " + imageY);
-                tempSavedImage[imageX][imageY] = color;
+                tempSavedImage[imageY][imageX] = color;
 
 
             }
@@ -618,7 +618,9 @@ public class Drawing extends Screen {
     protected void init() {
         //clear boxes
         //drawnBoxes.clear();
-        tempSavedImage = new int[canvasWidth()][canvasHeight()];
+        tempSavedImage = new int[canvasHeight()][canvasWidth()];
+        // y=0 [0 1 2 3 4 5]
+        // y=1 [0 1 2 3 4 5]
         System.out.println("tempsaved length " + tempSavedImage.length);
         System.out.println("canvasHeight : " + canvasHeight());
         System.out.println("canvaswidth : " + canvasWidth());
@@ -802,18 +804,21 @@ public class Drawing extends Screen {
 
     }
 
-
+    /***
+     *  imports the given painting(txt) file from reader and displays it on the canvas
+     * @param reader
+     * @throws IOException
+     */
     public void importFrom(Reader reader) throws IOException {
         System.out.println("IMPORT width=" + width + " height=" + height);
-
+        //imports seem to be mostly working for now, just slightly squished
         BufferedReader buf = new BufferedReader(reader);
-
         drawStack.clear();
         List<Pixel> addedPixels = new ArrayList<>();
         int i = 0;
         int j = 0;
         //TODO: look into why init is being stalled, (should probably wait for init to run before running this)
-
+        // or cache the painting# and then open it on next keybinding.press
         //height = 126, width = 240
 //        int offsetX = (240 - 120) / 2;
 //        int offsetY = (126 - 63) / 2;
@@ -826,7 +831,11 @@ public class Drawing extends Screen {
         while ((line = buf.readLine()) != null) {
             i = 0;
             String string = buf.readLine();
+            if (string == null) {
+                break;
+            }
             String[] split = string.split(" ");
+
             for (String color : split) {
                 //System.out.println(color);
                 if (!color.equals("0")){
