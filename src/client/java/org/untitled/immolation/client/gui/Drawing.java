@@ -84,13 +84,17 @@ public class Drawing extends Screen {
 //                int leftY = p.y - half;
 //                int rightX = p.x + p.size;
 //                int rightY = p.y + p.size;
-                int half = p.size / 2;
-                int leftX = Math.max(p.x - half, canvasX());
-                int leftY = Math.max(p.y - half, canvasY());
-                int rightX = Math.min(p.x + p.size, canvasX()+canvasWidth()); //to ensure width=1 still shows up
-                int rightY  = Math.min(p.y + p.size, canvasY()+canvasHeight());
-                if (leftX<rightX && leftY<rightY) {
-                    context.fill(leftX,leftY,rightX,rightY, p.color);
+                if (p.size == 1) {
+                    context.fill(p.x, p.y, p.x+1, p.y+1, p.color);
+                } else {
+                    int half = p.size / 2;
+                    int leftX = Math.max(p.x - half, canvasX());
+                    int leftY = Math.max(p.y - half, canvasY());
+                    int rightX = Math.min(p.x + p.size, canvasX()+canvasWidth()); //to ensure width=1 still shows up
+                    int rightY  = Math.min(p.y + p.size, canvasY()+canvasHeight());
+                    if (leftX<rightX && leftY<rightY) {
+                        context.fill(leftX,leftY,rightX,rightY, p.color);
+                    }
                 }
 
                 //context.fill(p.x, p.y, p.x + p.size, p.y + p.size, p.color);
@@ -830,11 +834,8 @@ public class Drawing extends Screen {
         String line;
         while ((line = buf.readLine()) != null) {
             i = 0;
-            String string = buf.readLine();
-            if (string == null) {
-                break;
-            }
-            String[] split = string.split(" ");
+
+            String[] split = line.split(" ");
 
             for (String color : split) {
                 //System.out.println(color);
