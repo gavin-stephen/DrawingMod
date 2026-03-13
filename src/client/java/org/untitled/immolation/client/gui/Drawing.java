@@ -345,8 +345,7 @@ public class Drawing extends Screen {
         } else {
             onCanvas = false;
         }
-        //int half = pixelSize/2;
-        //add half because pixel is drawn centered at mouseX,mouseY
+
         if((isInCanvas(mouseX+pixelSize,mouseY+pixelSize) || isInCanvas(mouseX-pixelSize, mouseY-pixelSize)) && isMouseDown) {
             //Ensures that you can erase/paint single pixels from a still mouse click
             if (currentTool == Tool.PAINTBRUSH){
@@ -458,11 +457,7 @@ public class Drawing extends Screen {
 
     @Override
     public void mouseMoved(double mouseX, double mouseY) {
-//        if (!isInCanvas(mouseX, mouseY)) {
-//            if (isMouseDown) {
-//                cancelActiveTool();
-//            }
-//        }
+
         if (isInCanvas(mouseX, mouseY)) {
             //TODO: should make eraser preview show what is below it (likely have to use LWJGL directly)
             if (currentTool == Tool.ERASER) {
@@ -520,8 +515,7 @@ public class Drawing extends Screen {
 
             }
         }
-        //shouldnt need the incanvas check for dragging mouse (should be handled by command class)
-        //if (isInCanvas(mouseX, mouseY) && isMouseDown) {
+
         if (onCanvas) { //ensures that the last mouse down was within the canvas (currently drawing)
             if (currentTool == Tool.LINE) {
                 int clampedX = clampCanvasX(mouseX);
@@ -742,7 +736,7 @@ public class Drawing extends Screen {
             context.fill(leftX, leftY, rightX, rightY, hoverBorder.color);
         }
         //render all tool icons here
-        renderToolIcons(context);
+        //renderToolIcons(context);
 
     }
 
@@ -823,10 +817,7 @@ public class Drawing extends Screen {
         int j = 0;
         //TODO: look into why init is being stalled, (should probably wait for init to run before running this)
         // or cache the painting# and then open it on next keybinding.press
-        //height = 126, width = 240
-//        int offsetX = (240 - 120) / 2;
-//        int offsetY = (126 - 63) / 2;
-        //holy hardcoded values... it works just refactor later
+
         int offsetX = (480-240)/2;
         int offsetY = (252-126)/2;
         System.out.println("offsetX = " + offsetX);
@@ -845,24 +836,16 @@ public class Drawing extends Screen {
                     addedPixels.add(new Pixel(newX,newY, Integer.parseInt(color) , 1));
 
                 }
-
                 //System.out.println("added pixel : x = " + newX  + " y = " + newY );
                 i++;
             }
             System.out.println("There were i values = " + i);
             j++;
-            //System.out.println(string);
+
         }
-        //TODO: appears that the txt files are being truncated?? j = 120 but width = 240... look back on it tomorrow
-        System.out.println("There were j values = " + j);
+
         drawStack.add(new PixelCommand(addedPixels));
-        for ( Pixel p : addedPixels) {
 
-        }
-
-        //assert client != null;
-
-         //holy my code is bad please refactor it later
     }
 
 
