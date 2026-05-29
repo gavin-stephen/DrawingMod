@@ -1,14 +1,11 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.*;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //render methods like drawSquare / drawLine / etc
-import static org.untitled.immolation.client.gui.RenderUtils.*;
+
 
 public class Drawing extends Screen {
 

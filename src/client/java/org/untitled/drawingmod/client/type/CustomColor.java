@@ -1,6 +1,5 @@
-package org.untitled.immolation.client.type;
+package org.untitled.drawingmod.client.type;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class CustomColor {

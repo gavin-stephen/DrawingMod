@@ -1,4 +1,4 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
 public class PersistentLines {
     public int x1, y1, x2, y2, width;

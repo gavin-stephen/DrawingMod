@@ -1,10 +1,10 @@
-package org.untitled.immolation.client;
+package org.untitled.drawingmod.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import org.untitled.immolation.client.keybinds.KeyBindManager;
-import org.untitled.immolation.client.commands.ModCommandManager;
+import org.untitled.drawingmod.client.keybinds.KeyBindManager;
+import org.untitled.drawingmod.client.commands.ModCommandManager;
 
-public class ImmolationClient implements ClientModInitializer {
+public class DrawingModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {

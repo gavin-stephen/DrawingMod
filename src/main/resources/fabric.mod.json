@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "immolation",
+  "id": "drawingmod",
   "version": "${version}",
-  "name": "immolation",
+  "name": "drawingmod",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/immolation/icon.png",
+  "icon": "assets/drawingmod/icon.png",
   "environment": "client",
   "entrypoints": {
     "fabric-datagen": [
-      "org.untitled.immolation.client.ImmolationDataGenerator"
+      "org.untitled.drawingmod.client.DrawingModDataGenerator"
     ],
     "client": [
-      "org.untitled.immolation.client.ImmolationClient"
+      "org.untitled.drawingmod.client.DrawingModClient"
     ],
     "main": [
-      "org.untitled.immolation.Immolation"
+      "org.untitled.drawingmod.DrawingMod"
     ]
   },
   "mixins": [
-    "immolation.mixins.json",
+    "drawingmod.mixins.json",
     {
-      "config": "immolation.client.mixins.json",
+      "config": "drawingmod.client.mixins.json",
       "environment": "client"
     }
   ],

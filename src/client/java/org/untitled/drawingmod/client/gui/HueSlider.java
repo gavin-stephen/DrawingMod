@@ -1,8 +1,7 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class HueSlider extends SliderWidget {

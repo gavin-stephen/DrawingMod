@@ -1,17 +1,14 @@
-package org.untitled.immolation.client.commands;
+package org.untitled.drawingmod.client.commands;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.navigation.GuiNavigation;
-import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.text.Text;
-import org.untitled.immolation.client.gui.Drawing;
+import org.untitled.drawingmod.client.gui.Drawing;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Objects;
 
 public class ImportPaintingCommand {

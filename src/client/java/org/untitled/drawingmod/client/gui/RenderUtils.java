@@ -1,4 +1,4 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgramKeys;

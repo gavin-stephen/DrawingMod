@@ -1,6 +1,5 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
-import org.untitled.immolation.client.gui.ColorPicker;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 

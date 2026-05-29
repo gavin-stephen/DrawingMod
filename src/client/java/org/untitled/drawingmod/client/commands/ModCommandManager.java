@@ -1,15 +1,12 @@
-package org.untitled.immolation.client.commands;
+package org.untitled.drawingmod.client.commands;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static net.minecraft.text.Text.literal;
 

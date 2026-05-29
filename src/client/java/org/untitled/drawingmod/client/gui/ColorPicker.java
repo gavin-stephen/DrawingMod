@@ -1,10 +1,9 @@
-package org.untitled.immolation.client.gui;
+package org.untitled.drawingmod.client.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.awt.Color;
 public class ColorPicker extends ClickableWidget {

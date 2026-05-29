@@ -14,7 +14,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "immolation" {
+        "drawingmod" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
